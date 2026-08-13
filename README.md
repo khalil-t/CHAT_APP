@@ -4,7 +4,7 @@ A chat application built as a system design exercise. The goal is a smooth, real
 
 ## Architecture
 
-![architecture diagram](/app/docs/architecture.png)
+![architecture diagram](/docs/architecture.png)
 
 **Request flow, end to end:**
 
