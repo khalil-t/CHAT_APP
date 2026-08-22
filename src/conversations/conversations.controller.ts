@@ -16,12 +16,12 @@ export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) {}
 
   @Get()
-  findAll(@Query('userId') userId?: string): Promise<Conversations[]> {
+  findAll(@Query('userId') userId?: Number): Promise<Conversations[]> {
     return this.conversationsService.findAll(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Conversations> {
+  findOne(@Param('id') id: Number): Promise<Conversations> {
     return this.conversationsService.findOne(id);
   }
 

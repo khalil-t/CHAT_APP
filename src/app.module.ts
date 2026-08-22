@@ -5,6 +5,11 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { ConversationsModule } from './conversations/conversations.module';
+import { ContactsController } from './contacts/contacts.controller';
+import { ContactsModule } from './contacts/contacts.module';
+import { ConversationMembersService } from './conversation_members/conversation_members.service';
+import { ConversationMembersModule } from './conversation_members/conversation_members.module';
+import { ConversationMembersService } from './conversation_members/conversation_members.service';
 
 @Module({
   imports: [
@@ -35,6 +40,12 @@ import { ConversationsModule } from './conversations/conversations.module';
     MessageModule,
 
     ConversationsModule,
+
+    ContactsModule,
+
+    ConversationMembersModule,
   ],
+  controllers: [ContactsController],
+  providers: [ConversationMembersService],
 })
 export class AppModule {}

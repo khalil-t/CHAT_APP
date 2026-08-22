@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { User } from '../../user/entities/user.entity';
+import { Conversations } from 'src/conversations/entities/conversations.entity';
 
 @Entity({ name: 'messages' })
 export class Message {
@@ -30,4 +31,8 @@ export class Message {
   @ManyToOne(() => User, (user) => user.id, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'sender_id' })
   sender: User;
+
+@ManyToOne(() => Conversations, conversation => conversation.messages)
+@JoinColumn({ name: 'conversation_id' })
+conversation: Conversations;
 }

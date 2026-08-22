@@ -11,7 +11,7 @@ export class ConversationsService {
     private readonly conversationsRepository: Repository<Conversations>,
   ) {}
 
-  async findAll(userId?: string): Promise<Conversations[]> {
+  async findAll(userId?: Number): Promise<Conversations[]> {
     if (!userId) {
       return this.conversationsRepository.find({
         order: { createdAt: 'DESC' },
@@ -24,7 +24,7 @@ export class ConversationsService {
     });
   }
 
-  async findOne(id: string): Promise<Conversations> {
+  async findOne(id: Number): Promise<Conversations> {
     const conversation = await this.conversationsRepository.findOne({
       where: { id },
     });
