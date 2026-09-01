@@ -35,9 +35,9 @@ describe('UserController', () => {
     it('should return a user', async () => {
       const mockUser = { id: '1', name: 'John Doe' };
       mockUserService.getUser.mockResolvedValue(mockUser);
-      
+
       const result = await controller.getUser('1');
-      
+
       expect(mockUserService.getUser).toHaveBeenCalledWith('1');
       expect(result).toEqual(mockUser);
     });

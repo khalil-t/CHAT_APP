@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { Message } from './entities/message.entity';
 
@@ -9,6 +10,7 @@ export class MessageService {
   constructor(
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async findAll(conversationId?: string): Promise<Message[]> {
@@ -50,6 +52,12 @@ export class MessageService {
       content: data.content,
     });
 
+
+this.eventEmitter.emit(
+  'message.created',
+  message,
+);
+
     return this.messageRepository.save(message);
   }
 
@@ -59,5 +67,16 @@ export class MessageService {
     if (result.affected === 0) {
       throw new NotFoundException(`Message with id "${id}" not found`);
     }
+  }
+
+  async markAsRead(id: string, userId: string): Promise<Message> {
+    const message = await this.findOne(id);
+
+    if (!message.readAt && message.senderId !== userId) {
+      message.readAt = new Date();
+      return this.messageRepository.save(message);
+    }
+
+    return message;
   }
 }

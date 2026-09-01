@@ -4,7 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import { UserRole } from 'src/common/enums/user.enum';
 import { Message } from 'src/modules/message/entities/message.entity';
@@ -13,10 +13,10 @@ import { Conversation_Members } from 'src/modules/conversation_members/entities/
 @Entity({ name: 'conversations' })
 export class Conversations {
   @PrimaryGeneratedColumn('uuid')
-  id: Number;
+  id: number;
 
   @Column({ type: 'uuid', nullable: false })
-  userId: Number;
+  userId: number;
 
   @Column({ type: 'varchar', length: 255, default: 'New chat' })
   title: string;
@@ -25,23 +25,18 @@ export class Conversations {
   createdAt: Date;
 
   @Column({
-      type:'enum',
-      enum: UserRole,
-      default: UserRole.USER
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
   })
-  role:UserRole 
-
+  role: UserRole;
 
   @Column()
-  joined_at :Date
+  joined_at: Date;
 
-@OneToMany(() => Message, message => message.conversation)
-messages: Message[];
+  @OneToMany(() => Message, (message) => message.conversation)
+  messages: Message[];
 
-
-@OneToMany(
-  () => Conversation_Members,
-  member => member.conversation
-)
-members: Conversation_Members[];
+  @OneToMany(() => Conversation_Members, (member) => member.conversation)
+  members: Conversation_Members[];
 }

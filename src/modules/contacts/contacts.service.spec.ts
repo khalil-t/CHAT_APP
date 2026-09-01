@@ -70,9 +70,9 @@ describe('ContactsService', () => {
     it('should throw NotFoundException if contact not found', async () => {
       mockContactsRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne({ userId: 1, contactUserId: 2 })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.findOne({ userId: 1, contactUserId: 2 }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -90,18 +90,32 @@ describe('ContactsService', () => {
         contactUserId: 2,
         status: 'active',
       });
-      expect(mockContactsRepository.save).toHaveBeenCalledWith(mockCreatedContact);
+      expect(mockContactsRepository.save).toHaveBeenCalledWith(
+        mockCreatedContact,
+      );
       expect(result).toEqual(mockCreatedContact);
     });
   });
 
   describe('updateStatus', () => {
     it('should update the status of a contact', async () => {
-      const mockContact = { id: 1, userId: 1, contactUserId: 2, status: 'active' };
+      const mockContact = {
+        id: 1,
+        userId: 1,
+        contactUserId: 2,
+        status: 'active',
+      };
       mockContactsRepository.findOne.mockResolvedValue(mockContact);
-      mockContactsRepository.save.mockResolvedValue({ ...mockContact, status: 'blocked' });
+      mockContactsRepository.save.mockResolvedValue({
+        ...mockContact,
+        status: 'blocked',
+      });
 
-      const result = await service.updateStatus({ userId: 1, contactUserId: 2, status: 'blocked' });
+      const result = await service.updateStatus({
+        userId: 1,
+        contactUserId: 2,
+        status: 'blocked',
+      });
 
       expect(result.status).toEqual('blocked');
       expect(mockContactsRepository.save).toHaveBeenCalled();
@@ -114,15 +128,18 @@ describe('ContactsService', () => {
 
       await service.remove({ userId: 1, contactUserId: 2 });
 
-      expect(mockContactsRepository.delete).toHaveBeenCalledWith({ userId: 1, contactUserId: 2 });
+      expect(mockContactsRepository.delete).toHaveBeenCalledWith({
+        userId: 1,
+        contactUserId: 2,
+      });
     });
 
     it('should throw NotFoundException if no rows affected', async () => {
       mockContactsRepository.delete.mockResolvedValue({ affected: 0 });
 
-      await expect(service.remove({ userId: 1, contactUserId: 2 })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.remove({ userId: 1, contactUserId: 2 }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

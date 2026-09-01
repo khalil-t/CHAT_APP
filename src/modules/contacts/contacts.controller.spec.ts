@@ -54,7 +54,10 @@ describe('ContactsController', () => {
 
       const result = await controller.findOne(1, 2);
 
-      expect(mockContactsService.findOne).toHaveBeenCalledWith({ userId: 1, contactUserId: 2 });
+      expect(mockContactsService.findOne).toHaveBeenCalledWith({
+        userId: 1,
+        contactUserId: 2,
+      });
       expect(result).toEqual(mockContact);
     });
   });
@@ -91,7 +94,10 @@ describe('ContactsController', () => {
 
       await controller.remove(1, 2);
 
-      expect(mockContactsService.remove).toHaveBeenCalledWith({ userId: 1, contactUserId: 2 });
+      expect(mockContactsService.remove).toHaveBeenCalledWith({
+        userId: 1,
+        contactUserId: 2,
+      });
     });
   });
 });

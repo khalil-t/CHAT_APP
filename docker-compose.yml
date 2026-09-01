@@ -33,6 +33,8 @@ services:
       - chat-network
     restart: unless-stopped
 
+    
+
 networks:
   chat-network:
     driver: bridge

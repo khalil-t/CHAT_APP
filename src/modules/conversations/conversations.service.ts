@@ -11,7 +11,7 @@ export class ConversationsService {
     private readonly conversationsRepository: Repository<Conversations>,
   ) {}
 
-  async findAll(userId?: Number): Promise<Conversations[]> {
+  async findAll(userId?: number): Promise<Conversations[]> {
     if (!userId) {
       return this.conversationsRepository.find({
         order: { createdAt: 'DESC' },
@@ -24,7 +24,7 @@ export class ConversationsService {
     });
   }
 
-  async findOne(id: Number): Promise<Conversations> {
+  async findOne(id: number): Promise<Conversations> {
     const conversation = await this.conversationsRepository.findOne({
       where: { id },
     });
@@ -36,7 +36,10 @@ export class ConversationsService {
     return conversation;
   }
 
-  async create(data: { userId: string; title?: string }): Promise<Conversations> {
+  async create(data: {
+    userId: string;
+    title?: string;
+  }): Promise<Conversations> {
     const conversation = this.conversationsRepository.create({
       userId: data.userId,
       title: data.title ?? 'New chat',

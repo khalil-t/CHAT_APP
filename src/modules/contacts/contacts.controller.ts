@@ -23,7 +23,7 @@ export class ContactsController {
   @Get('find-one')
   findOne(
     @Query('userId') userId: number,
-    @Query('contactUserId') contactUserId: number
+    @Query('contactUserId') contactUserId: number,
   ): Promise<Contact> {
     return this.contactsService.findOne({ userId, contactUserId });
   }
@@ -31,7 +31,11 @@ export class ContactsController {
   @Post()
   create(
     @Body()
-    data: { userId: number; contactUserId: number; status?: string }
+    data: {
+      userId: number;
+      contactUserId: number;
+      status?: string;
+    },
   ): Promise<Contact> {
     return this.contactsService.create(data);
   }
@@ -39,7 +43,11 @@ export class ContactsController {
   @Patch('status')
   updateStatus(
     @Body()
-    data: { userId: number; contactUserId: number; status: string }
+    data: {
+      userId: number;
+      contactUserId: number;
+      status: string;
+    },
   ): Promise<Contact> {
     return this.contactsService.updateStatus(data);
   }
@@ -47,7 +55,7 @@ export class ContactsController {
   @Delete()
   remove(
     @Query('userId') userId: number,
-    @Query('contactUserId') contactUserId: number
+    @Query('contactUserId') contactUserId: number,
   ): Promise<void> {
     return this.contactsService.remove({ userId, contactUserId });
   }

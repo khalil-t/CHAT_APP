@@ -1,5 +1,5 @@
-export enum status{
-   pending='pending', 
-   accepted='accepted', 
-   blocked='blocked' 
-} 
+export enum status {
+  pending = 'pending',
+  accepted = 'accepted',
+  blocked = 'blocked',
+}

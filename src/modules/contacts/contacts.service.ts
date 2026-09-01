@@ -32,9 +32,7 @@ export class ContactsService {
     });
 
     if (!contact) {
-      throw new NotFoundException(
-        `Contact relationship not found`
-      );
+      throw new NotFoundException(`Contact relationship not found`);
     }
 
     return contact;
@@ -68,19 +66,14 @@ export class ContactsService {
     return this.contactsRepository.save(contact);
   }
 
-  async remove(data: {
-    userId: number;
-    contactUserId: number;
-  }): Promise<void> {
+  async remove(data: { userId: number; contactUserId: number }): Promise<void> {
     const result = await this.contactsRepository.delete({
       userId: data.userId,
       contactUserId: data.contactUserId,
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(
-        'Contact relationship not found'
-      );
+      throw new NotFoundException('Contact relationship not found');
     }
   }
 }

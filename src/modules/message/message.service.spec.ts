@@ -52,7 +52,9 @@ describe('MessageService', () => {
     });
 
     it('should return messages for a specific conversation', async () => {
-      const mockMessages = [{ id: '1', content: 'test', conversationId: 'conv-1' }];
+      const mockMessages = [
+        { id: '1', content: 'test', conversationId: 'conv-1' },
+      ];
       mockMessageRepository.find.mockResolvedValue(mockMessages);
 
       const result = await service.findAll('conv-1');
@@ -89,7 +91,11 @@ describe('MessageService', () => {
 
   describe('create', () => {
     it('should create and return a message', async () => {
-      const mockData = { conversationId: 'conv-1', senderId: 'user-1', content: 'Hi' };
+      const mockData = {
+        conversationId: 'conv-1',
+        senderId: 'user-1',
+        content: 'Hi',
+      };
       const mockCreated = { id: '1', ...mockData };
       mockMessageRepository.create.mockReturnValue(mockCreated);
       mockMessageRepository.save.mockResolvedValue(mockCreated);
@@ -103,7 +109,11 @@ describe('MessageService', () => {
 
     it('should create with null conversationId if not provided', async () => {
       const mockData = { senderId: 'user-1', content: 'Hi' };
-      const expectedCreate = { conversationId: null, senderId: 'user-1', content: 'Hi' };
+      const expectedCreate = {
+        conversationId: null,
+        senderId: 'user-1',
+        content: 'Hi',
+      };
       const mockCreated = { id: '1', ...expectedCreate };
       mockMessageRepository.create.mockReturnValue(mockCreated);
       mockMessageRepository.save.mockResolvedValue(mockCreated);

@@ -14,7 +14,6 @@ import jwtConfig from '../../../common/config/jwt.config';
 import { REQUEST_USER_KEY } from '../../../common/constants';
 import type { ActiveUserData } from '../../../common/interfaces/active-user-data.interface';
 
-
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
@@ -64,5 +63,3 @@ export class JwtAuthGuard implements CanActivate {
     return token;
   }
 }
-
-

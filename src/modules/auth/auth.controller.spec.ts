@@ -34,7 +34,12 @@ describe('AuthController', () => {
 
   describe('signUp', () => {
     it('should call authService.signUp', async () => {
-      const signUpDto = { email: 'test@example.com', password: 'password123', passwordConfirm: 'password123', created_at: new Date() };
+      const signUpDto = {
+        email: 'test@example.com',
+        password: 'password123',
+        passwordConfirm: 'password123',
+        created_at: new Date(),
+      };
       mockAuthService.signUp.mockResolvedValue(undefined);
 
       await controller.signUp(signUpDto);
@@ -46,7 +51,9 @@ describe('AuthController', () => {
   describe('signIn', () => {
     it('should call authService.signIn and return access token', async () => {
       const signInDto = { email: 'test@example.com', password: 'password123' };
-      mockAuthService.signIn.mockResolvedValue({ accessToken: 'valid-jwt-token' });
+      mockAuthService.signIn.mockResolvedValue({
+        accessToken: 'valid-jwt-token',
+      });
 
       const result = await controller.signIn(signInDto);
 

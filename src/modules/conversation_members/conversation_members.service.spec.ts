@@ -26,7 +26,9 @@ describe('ConversationMembersService', () => {
       ],
     }).compile();
 
-    service = module.get<ConversationMembersService>(ConversationMembersService);
+    service = module.get<ConversationMembersService>(
+      ConversationMembersService,
+    );
   });
 
   afterEach(() => {
@@ -54,7 +56,7 @@ describe('ConversationMembersService', () => {
       const mockMembers = [{ userId: 1, conversationId: 2 }];
       mockRepo.find.mockResolvedValue(mockMembers);
 
-      const result = await service.findAll(1 as any);
+      const result = await service.findAll(1);
 
       expect(mockRepo.find).toHaveBeenCalledWith({
         where: { userId: 1 },
@@ -80,9 +82,9 @@ describe('ConversationMembersService', () => {
     it('should throw NotFoundException if member not found', async () => {
       mockRepo.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne({ userId: 1, conversationId: 2 })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.findOne({ userId: 1, conversationId: 2 }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -107,15 +109,18 @@ describe('ConversationMembersService', () => {
 
       await service.remove({ userId: 1, conversationId: 2 });
 
-      expect(mockRepo.delete).toHaveBeenCalledWith({ userId: 1, conversationId: 2 });
+      expect(mockRepo.delete).toHaveBeenCalledWith({
+        userId: 1,
+        conversationId: 2,
+      });
     });
 
     it('should throw NotFoundException if no rows affected', async () => {
       mockRepo.delete.mockResolvedValue({ affected: 0 });
 
-      await expect(service.remove({ userId: 1, conversationId: 2 })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.remove({ userId: 1, conversationId: 2 }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

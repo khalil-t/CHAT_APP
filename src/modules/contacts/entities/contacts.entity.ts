@@ -6,7 +6,7 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
-  PrimaryColumn
+  PrimaryColumn,
 } from 'typeorm';
 import { User } from 'src/modules/user/entities/user.entity';
 import { status } from '../../../common/enums/status.enum';
@@ -28,7 +28,7 @@ export class Contact {
   contactUser: User;
 
   @Column({ nullable: true })
-  status: string; 
+  status: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

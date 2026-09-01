@@ -60,7 +60,11 @@ describe('MessageController', () => {
 
   describe('create', () => {
     it('should create a message', async () => {
-      const mockData = { conversationId: 'conv-1', senderId: 'user-1', content: 'Hi' };
+      const mockData = {
+        conversationId: 'conv-1',
+        senderId: 'user-1',
+        content: 'Hi',
+      };
       const mockMessage = { id: '1', ...mockData };
       mockMessageService.create.mockResolvedValue(mockMessage);
 

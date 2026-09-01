@@ -54,7 +54,7 @@ describe('ConversationsService', () => {
       const mockConversations = [{ id: 1, userId: 'user-1' }];
       mockConversationsRepository.find.mockResolvedValue(mockConversations);
 
-      const result = await service.findAll(1 as any);
+      const result = await service.findAll(1);
 
       expect(mockConversationsRepository.find).toHaveBeenCalledWith({
         where: { userId: 1 },
@@ -97,7 +97,9 @@ describe('ConversationsService', () => {
         userId: 'user-1',
         title: 'Test Chat',
       });
-      expect(mockConversationsRepository.save).toHaveBeenCalledWith(mockCreated);
+      expect(mockConversationsRepository.save).toHaveBeenCalledWith(
+        mockCreated,
+      );
       expect(result).toEqual(mockCreated);
     });
 

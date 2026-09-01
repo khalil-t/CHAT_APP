@@ -40,7 +40,9 @@ describe('UserService', () => {
 
       const result = await service.getUser('1');
 
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { id: '1' },
+      });
       expect(result).toEqual(mockUser);
     });
 
@@ -48,7 +50,9 @@ describe('UserService', () => {
       mockUserRepository.findOne.mockResolvedValue(null);
 
       await expect(service.getUser('1')).rejects.toThrow(BadRequestException);
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { id: '1' },
+      });
     });
   });
 });

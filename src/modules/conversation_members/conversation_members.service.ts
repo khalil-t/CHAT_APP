@@ -1,16 +1,15 @@
-import { Injectable , NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import {Conversation_Members} from './entities/conversation_members.entity'
+import { Conversation_Members } from './entities/conversation_members.entity';
 @Injectable()
 export class ConversationMembersService {
-
- constructor(
+  constructor(
     @InjectRepository(Conversation_Members)
     private readonly conversationsMembersRepository: Repository<Conversation_Members>,
   ) {}
 
-  async findAll(userId?: Number): Promise<Conversation_Members[]> {
+  async findAll(userId?: number): Promise<Conversation_Members[]> {
     if (!userId) {
       return this.conversationsMembersRepository.find({
         order: { joined_at: 'DESC' },
@@ -23,9 +22,10 @@ export class ConversationMembersService {
     });
   }
 
-  async findOne(
-    data: { userId: number; conversationId: number }
-  ): Promise<Conversation_Members> {
+  async findOne(data: {
+    userId: number;
+    conversationId: number;
+  }): Promise<Conversation_Members> {
     const conversation = await this.conversationsMembersRepository.findOne({
       where: {
         userId: data.userId,
@@ -34,17 +34,16 @@ export class ConversationMembersService {
     });
 
     if (!conversation) {
-      throw new NotFoundException(
-        `Conversation member relationship not found`
-      );
+      throw new NotFoundException(`Conversation member relationship not found`);
     }
 
     return conversation;
   }
 
-  async create(
-    data: { userId: number; conversationId: number }
-  ): Promise<Conversation_Members> {
+  async create(data: {
+    userId: number;
+    conversationId: number;
+  }): Promise<Conversation_Members> {
     const member = this.conversationsMembersRepository.create({
       userId: data.userId,
       conversationId: data.conversationId,
@@ -62,10 +61,7 @@ export class ConversationMembersService {
     });
 
     if (result.affected === 0) {
-      throw new NotFoundException(
-        'Conversation member relationship not found'
-      );
+      throw new NotFoundException('Conversation member relationship not found');
     }
   }
-
 }

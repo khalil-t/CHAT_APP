@@ -24,7 +24,7 @@ describe('ConversationMembersController', () => {
     }).compile();
 
     controller = module.get<ConversationMembersController>(
-      ConversationMembersController
+      ConversationMembersController,
     );
   });
 
@@ -55,7 +55,10 @@ describe('ConversationMembersController', () => {
 
       const result = await controller.findOne(1, 2);
 
-      expect(mockService.findOne).toHaveBeenCalledWith({ userId: 1, conversationId: 2 });
+      expect(mockService.findOne).toHaveBeenCalledWith({
+        userId: 1,
+        conversationId: 2,
+      });
       expect(result).toEqual(mockMember);
     });
   });
@@ -79,7 +82,10 @@ describe('ConversationMembersController', () => {
 
       await controller.remove(1, 2);
 
-      expect(mockService.remove).toHaveBeenCalledWith({ userId: 1, conversationId: 2 });
+      expect(mockService.remove).toHaveBeenCalledWith({
+        userId: 1,
+        conversationId: 2,
+      });
     });
   });
 });

@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 
 import { Conversation_Members } from './entities/conversation_members.entity';
 import { ConversationMembersService } from './conversation_members.service';
@@ -13,7 +6,7 @@ import { ConversationMembersService } from './conversation_members.service';
 @Controller('conversation-members')
 export class ConversationMembersController {
   constructor(
-    private readonly conversationMembersService: ConversationMembersService
+    private readonly conversationMembersService: ConversationMembersService,
   ) {}
 
   @Get()
@@ -24,7 +17,7 @@ export class ConversationMembersController {
   @Get('find-one')
   findOne(
     @Query('userId') userId: number,
-    @Query('conversationId') conversationId: number
+    @Query('conversationId') conversationId: number,
   ): Promise<Conversation_Members> {
     return this.conversationMembersService.findOne({ userId, conversationId });
   }
@@ -32,7 +25,10 @@ export class ConversationMembersController {
   @Post()
   create(
     @Body()
-    data: { userId: number; conversationId: number }
+    data: {
+      userId: number;
+      conversationId: number;
+    },
   ): Promise<Conversation_Members> {
     return this.conversationMembersService.create(data);
   }
@@ -40,7 +36,7 @@ export class ConversationMembersController {
   @Delete()
   remove(
     @Query('userId') userId: number,
-    @Query('conversationId') conversationId: number
+    @Query('conversationId') conversationId: number,
   ): Promise<void> {
     return this.conversationMembersService.remove({
       userId,

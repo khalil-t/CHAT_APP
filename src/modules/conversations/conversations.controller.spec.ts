@@ -39,7 +39,7 @@ describe('ConversationsController', () => {
       const mockConversations = [{ id: 1, userId: 'user-1' }];
       mockConversationsService.findAll.mockResolvedValue(mockConversations);
 
-      const result = await controller.findAll(1 as any);
+      const result = await controller.findAll(1);
 
       expect(mockConversationsService.findAll).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockConversations);
@@ -51,7 +51,7 @@ describe('ConversationsController', () => {
       const mockConversation = { id: 1, userId: 'user-1' };
       mockConversationsService.findOne.mockResolvedValue(mockConversation);
 
-      const result = await controller.findOne(1 as any);
+      const result = await controller.findOne(1);
 
       expect(mockConversationsService.findOne).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockConversation);

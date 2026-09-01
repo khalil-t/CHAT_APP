@@ -28,11 +28,17 @@ export class Message {
   @CreateDateColumn({ name: 'sent_at', type: 'timestamp' })
   sentAt: Date;
 
-  @ManyToOne(() => User, (user) => user.id, { nullable: false, onDelete: 'CASCADE' })
+  @Column({ name: 'read_at', type: 'timestamp', nullable: true })
+  readAt: Date | null;
+
+  @ManyToOne(() => User, (user) => user.id, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'sender_id' })
   sender: User;
 
-@ManyToOne(() => Conversations, conversation => conversation.messages)
-@JoinColumn({ name: 'conversation_id' })
-conversation: Conversations;
+  @ManyToOne(() => Conversations, (conversation) => conversation.messages)
+  @JoinColumn({ name: 'conversation_id' })
+  conversation: Conversations;
 }

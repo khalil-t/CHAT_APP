@@ -65,7 +65,12 @@ describe('AuthService', () => {
 
   describe('signUp', () => {
     it('should save a new user', async () => {
-      const signUpDto = { email: 'test@example.com', password: 'password123', passwordConfirm: 'password123', created_at: new Date() };
+      const signUpDto = {
+        email: 'test@example.com',
+        password: 'password123',
+        passwordConfirm: 'password123',
+        created_at: new Date(),
+      };
       mockBcryptService.hash.mockResolvedValue('hashedPassword');
       mockUserRepository.save.mockResolvedValue(true);
 
@@ -79,16 +84,25 @@ describe('AuthService', () => {
   describe('signIn', () => {
     it('should return access token for valid credentials', async () => {
       const signInDto = { email: 'test@example.com', password: 'password123' };
-      const user = { id: 1, email: 'test@example.com', password: 'hashedPassword' };
-      
+      const user = {
+        id: 1,
+        email: 'test@example.com',
+        password: 'hashedPassword',
+      };
+
       mockUserRepository.findOne.mockResolvedValue(user);
       mockBcryptService.compare.mockResolvedValue(true);
       mockJwtService.signAsync.mockResolvedValue('valid-jwt-token');
 
       const result = await service.signIn(signInDto);
 
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { email: signInDto.email } });
-      expect(mockBcryptService.compare).toHaveBeenCalledWith('password123', 'hashedPassword');
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { email: signInDto.email },
+      });
+      expect(mockBcryptService.compare).toHaveBeenCalledWith(
+        'password123',
+        'hashedPassword',
+      );
       expect(mockJwtService.signAsync).toHaveBeenCalled();
       expect(result).toEqual({ accessToken: 'valid-jwt-token' });
     });
@@ -97,17 +111,28 @@ describe('AuthService', () => {
       const signInDto = { email: 'test@example.com', password: 'password123' };
       mockUserRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.signIn(signInDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.signIn(signInDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should throw UnauthorizedException if password does not match', async () => {
-      const signInDto = { email: 'test@example.com', password: 'wrongpassword' };
-      const user = { id: 1, email: 'test@example.com', password: 'hashedPassword' };
-      
+      const signInDto = {
+        email: 'test@example.com',
+        password: 'wrongpassword',
+      };
+      const user = {
+        id: 1,
+        email: 'test@example.com',
+        password: 'hashedPassword',
+      };
+
       mockUserRepository.findOne.mockResolvedValue(user);
       mockBcryptService.compare.mockResolvedValue(false);
 
-      await expect(service.signIn(signInDto)).rejects.toThrow(UnauthorizedException);
+      await expect(service.signIn(signInDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

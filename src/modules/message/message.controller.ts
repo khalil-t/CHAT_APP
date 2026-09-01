@@ -16,7 +16,9 @@ export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Get()
-  findAll(@Query('conversationId') conversationId?: string): Promise<Message[]> {
+  findAll(
+    @Query('conversationId') conversationId?: string,
+  ): Promise<Message[]> {
     return this.messageService.findAll(conversationId);
   }
 
