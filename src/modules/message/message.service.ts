@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
+import { RabbitMQService } from '../../infrastructure/rabbitmq/rabbitmq.service';
 import { Message } from './entities/message.entity';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class MessageService {
     @InjectRepository(Message)
     private readonly messageRepository: Repository<Message>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly rabbitMQ:RabbitMQService,
   ) {}
 
   async findAll(conversationId?: string): Promise<Message[]> {
@@ -51,14 +52,22 @@ export class MessageService {
       senderId: data.senderId,
       content: data.content,
     });
+this.messageRepository.save(message);
 
+    await this.rabbitMQ.publish(
+ 'chat.events',
+    'message.created',
+    {
+      messageId: message.id,
+      conversationId:
+        message.conversationId,
+      senderId: message.senderId,
+      content: message.content,
+      readAt: message.readAt,
+    },
+    )
 
-this.eventEmitter.emit(
-  'message.created',
-  message,
-);
-
-    return this.messageRepository.save(message);
+    return message
   }
 
   async remove(id: string): Promise<void> {

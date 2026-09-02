@@ -8,7 +8,8 @@ import { ConversationsModule } from './modules/conversations/conversations.modul
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { ConversationMembersModule } from './modules/conversation_members/conversation_members.module';
 import jwtConfig from './common/config/jwt.config';
-//import { RealtimeModule } from './modules/realtime/realtime.module';
+import { RealtimeModule } from './modules/realtime/realtime.module';
+import { RabbitMQModule } from './infrastructure/rabbitmq/rabbitmq.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,6 +38,8 @@ import jwtConfig from './common/config/jwt.config';
     ConversationsModule,
     ContactsModule,
     ConversationMembersModule,
+    RealtimeModule,
+    RabbitMQModule
   ],
 })
 export class AppModule {}

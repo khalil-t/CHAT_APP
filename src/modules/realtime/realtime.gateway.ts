@@ -13,6 +13,7 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 
+
 import { Server, Socket } from 'socket.io';
 import type { Message as MessageEntity } from '../message/entities/message.entity';
 
@@ -109,11 +110,24 @@ export class RealtimeGateway {
     );
   }
 
+/*
   @OnEvent('message.created')
   handleMessageCreated(message: MessageEntity) {
     this.server
       .to(`conversation:${message.conversationId}`)
       .emit('message:new', message);
-  }
+  }*/
+
+      
+  deliverMessage(message: any) {
+  this.server
+    .to(
+      `conversation:${message.conversationId}`,
+    )
+    .emit(
+      'message:new',
+      message,
+    );
+}
 
 }

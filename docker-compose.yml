@@ -33,7 +33,23 @@ services:
       - chat-network
     restart: unless-stopped
 
-    
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: chat-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - chat-network
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
 
 networks:
   chat-network:
