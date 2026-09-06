@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: 'Inter', 'Inter Fallback';
+  --radius-lg: 0.85rem;
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.985 0.004 260);
+  --foreground: oklch(0.19 0.02 260);
+  --card: oklch(1 0 0);
+  --primary: oklch(0.48 0.19 258);
+  --primary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.955 0.008 260);
+  --muted-foreground: oklch(0.52 0.025 260);
+  --border: oklch(0.91 0.012 260);
+  --ring: oklch(0.48 0.19 258);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.16 0.015 255);
+  --foreground: oklch(0.94 0.01 255);
+  --card: oklch(0.195 0.015 255);
+  --primary: oklch(0.68 0.16 255);
+  --primary-foreground: oklch(0.14 0.025 255);
+  --muted: oklch(0.235 0.018 255);
+  --muted-foreground: oklch(0.68 0.025 255);
+  --border: oklch(1 0 0 / 11%);
+  --ring: oklch(0.68 0.16 255);
+}
+
+* { @apply border-border outline-ring/50; }
+html, body { min-height: 100%; }
+body { @apply bg-background text-foreground font-sans; }
+button, input, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { @apply outline-2 outline-offset-2 outline-ring; }
+
+@keyframes message-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.message-in { animation: message-in 240ms ease-out both; }
+
+.auth-orbit {
+  position: absolute;
+  left: -18rem;
+  top: -14rem;
+  width: 58rem;
+  height: 58rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklch, var(--primary) 35%, transparent);
+  box-shadow: 0 0 8rem color-mix(in oklch, var(--primary) 24%, transparent), inset 0 0 7rem color-mix(in oklch, var(--primary) 12%, transparent);
+  transform: rotate(-24deg);
+  opacity: .8;
+}
+
+@media (max-width: 1024px) {
+  .auth-orbit { left: -28rem; top: -21rem; opacity: .45; }
+}
