@@ -4,7 +4,7 @@
 
 export type User = {
   id: string
-  name: string
+  name?: string
   avatar?: string
   email?: string
   onlineStatus?: 'online' | 'offline' | 'away'

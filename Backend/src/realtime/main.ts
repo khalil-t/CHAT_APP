@@ -1,9 +1,9 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { RealtimeAppModule } from './realtime.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(RealtimeAppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -33,9 +33,12 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  const port = Number(process.env.API_PORT ?? process.env.PORT ?? 3001);
+  const port = Number(process.env.REALTIME_PORT ?? 3002);
+
   await app.listen(port);
 
-  new Logger('ApiBootstrap').log(`API service listening on http://localhost:${port}`);
+  new Logger('RealtimeBootstrap').log(
+    `Realtime service listening on ws://localhost:${port}/realtime`,
+  );
 }
 void bootstrap();

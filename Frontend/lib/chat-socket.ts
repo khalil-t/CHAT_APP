@@ -58,7 +58,7 @@ export const chatSocket = {
    */
   joinRoom: (conversationId: string): void => {
     if (socketInstance?.connected) {
-      socketInstance.emit('join', { conversationId })
+      socketInstance.emit('conversation:join', { conversationId })
     }
   },
 
@@ -67,7 +67,7 @@ export const chatSocket = {
    */
   leaveRoom: (conversationId: string): void => {
     if (socketInstance?.connected) {
-      socketInstance.emit('leave', { conversationId })
+      socketInstance.emit('conversation:leave', { conversationId })
     }
   },
 

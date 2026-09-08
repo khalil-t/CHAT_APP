@@ -58,6 +58,20 @@ export const chatApi = {
     return response.json()
   },
 
+  createConversation: async (userId: string, title: string | undefined, token: string): Promise<Conversation> => {
+    const response = await fetch(`${API_URL}/conversations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId, title }),
+    })
+
+    if (!response.ok) throw new Error('Failed to create conversation')
+    return response.json()
+  },
+
   /**
    * Message endpoints
    */
@@ -73,15 +87,19 @@ export const chatApi = {
   createMessage: async (
     conversationId: string,
     content: string,
-    token: string
+    token: string,
+    senderId?: string,
   ): Promise<Message> => {
+    const body: Record<string, any> = { conversationId, content }
+    if (senderId) body.senderId = senderId
+
     const response = await fetch(`${API_URL}/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ conversationId, content }),
+      body: JSON.stringify(body),
     })
 
     if (!response.ok) throw new Error('Failed to send message')
@@ -92,7 +110,7 @@ export const chatApi = {
    * User endpoints
    */
   getCurrentUser: async (token: string): Promise<User> => {
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/users/user`, {
       headers: { Authorization: `Bearer ${token}` },
     })
 

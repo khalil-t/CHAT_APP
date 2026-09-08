@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export function getSocket(accessToken: string): Socket {
   if (!socket) {
-    socket = io(`${process.env.SOCKET_URL || 'http://localhost:3001'}/realtime`, {
+    socket = io(`${process.env.SOCKET_URL || 'http://localhost:3002'}/realtime`, {
       transports: ['websocket'],
 
       autoConnect: false,

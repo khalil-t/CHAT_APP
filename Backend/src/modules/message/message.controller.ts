@@ -6,13 +6,17 @@ import {
   Param,
   Post,
   Query,
+  BadRequestException,
+  Logger,
 } from '@nestjs/common';
 
 import { Message } from './entities/message.entity';
 import { MessageService } from './message.service';
+import { isUUID } from 'class-validator';
 
 @Controller('messages')
 export class MessageController {
+  private readonly logger = new Logger(MessageController.name);
   constructor(private readonly messageService: MessageService) {}
 
   @Get()
@@ -36,7 +40,26 @@ export class MessageController {
       content: string;
     },
   ): Promise<Message> {
-    return this.messageService.create(data);
+    const conversationId = data.conversationId ?? null;
+
+    if (conversationId && !isUUID(conversationId as string)) {
+      const isDev = process.env.NODE_ENV !== 'production';
+
+      if (isDev) {
+        this.logger.warn(`Received non-UUID conversationId "${conversationId}" in development; treating as null.`);
+        return this.messageService.create({
+          ...data,
+          conversationId: null,
+        });
+      }
+
+      throw new BadRequestException('conversationId must be a valid UUID');
+    }
+
+    return this.messageService.create({
+      ...data,
+      conversationId,
+    });
   }
 
   @Delete(':id')
