@@ -23,7 +23,7 @@ export class RabbitMQService
     await this.connect();
   }
 
-  private async connect() {
+  private async connect(retries = 10, delay = 1000) {
     const host =
       this.configService.get<string>('RABBITMQ_HOST') ?? 'localhost';
     const port = Number(
@@ -42,11 +42,25 @@ export class RabbitMQService
     if (user) opts.username = user;
     if (pass) opts.password = pass;
 
-    this.connection = (await amqp.connect(opts)) as any;
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        this.connection = (await amqp.connect(opts)) as any;
+        this.channel = await this.connection.createChannel();
+        this.logger.log('Connected to RabbitMQ');
+        return;
+      } catch (error) {
+        this.logger.warn(
+          `RabbitMQ connection attempt ${attempt}/${retries} failed: ${error.message}`,
+        );
 
-    this.channel = await this.connection.createChannel();
+        if (attempt === retries) {
+          this.logger.error('Max retries reached. Could not connect to RabbitMQ.');
+          throw error;
+        }
 
-    this.logger.log('Connected to RabbitMQ');
+        await new Promise((resolve) => setTimeout(resolve, delay * attempt));
+      }
+    }
   }
 
   async publish(
