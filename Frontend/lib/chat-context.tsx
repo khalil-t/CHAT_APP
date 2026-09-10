@@ -31,13 +31,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [])
 
   const addMessage = useCallback((message: Message) => {
-    setMessagesMap((prev) => ({
-      ...prev,
-      [message.conversationId]: [
-        ...(prev[message.conversationId] || []),
-        message,
-      ],
-    }))
+    setMessagesMap((prev) => {
+      const existing = prev[message.conversationId] || []
+      if (existing.some((item) => item.id === message.id)) return prev
+      return {
+        ...prev,
+        [message.conversationId]: [...existing, message],
+      }
+    })
   }, [])
 
   const setUnreadCounts = useCallback((counts: Record<string, number>) => {

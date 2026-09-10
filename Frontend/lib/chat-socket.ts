@@ -4,11 +4,16 @@
  */
 
 import { io, Socket } from 'socket.io-client'
-import type { Message } from './chat-types'
+import type { RealtimeMessage } from './chat-types'
 
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001'
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3002'
 
 let socketInstance: Socket | null = null
+const pendingRooms = new Set<string>()
+
+function emitJoin(conversationId: string) {
+  socketInstance?.emit('conversation:join', { conversationId })
+}
 
 export const chatSocket = {
   /**
@@ -29,6 +34,8 @@ export const chatSocket = {
 
         socketInstance.on('connect', () => {
           console.log('[v0] Socket connected')
+          pendingRooms.forEach(emitJoin)
+          pendingRooms.clear()
           resolve()
         })
 
@@ -58,7 +65,9 @@ export const chatSocket = {
    */
   joinRoom: (conversationId: string): void => {
     if (socketInstance?.connected) {
-      socketInstance.emit('conversation:join', { conversationId })
+      emitJoin(conversationId)
+    } else {
+      pendingRooms.add(conversationId)
     }
   },
 
@@ -66,6 +75,7 @@ export const chatSocket = {
    * Leave a conversation room
    */
   leaveRoom: (conversationId: string): void => {
+    pendingRooms.delete(conversationId)
     if (socketInstance?.connected) {
       socketInstance.emit('conversation:leave', { conversationId })
     }
@@ -74,9 +84,9 @@ export const chatSocket = {
   /**
    * Listen for new messages
    */
-  onNewMessage: (callback: (message: Message) => void): void => {
+  onNewMessage: (callback: (message: RealtimeMessage) => void): void => {
     if (socketInstance) {
-      socketInstance.on('message:new', (message: Message) => {
+      socketInstance.on('message:new', (message: RealtimeMessage) => {
         console.log('[v0] Received new message:', message)
         callback(message)
       })

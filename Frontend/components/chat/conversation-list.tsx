@@ -10,6 +10,8 @@ interface ConversationListProps {
   activeConversationId: string | null
   onSelectConversation: (id: string) => void
   isLoading?: boolean
+  onNewConversation?: () => void
+  showDiscovery?: boolean
 }
 
 export const ConversationList: React.FC<ConversationListProps> = ({
@@ -17,6 +19,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   activeConversationId,
   onSelectConversation,
   isLoading = false,
+  onNewConversation,
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -33,6 +36,8 @@ export const ConversationList: React.FC<ConversationListProps> = ({
           <button
             className="w-8 h-8 flex items-center justify-center hover:bg-muted rounded-lg transition-colors"
             title="New conversation"
+            onClick={onNewConversation}
+            aria-label="New conversation"
           >
             <Plus className="w-5 h-5 text-foreground" />
           </button>

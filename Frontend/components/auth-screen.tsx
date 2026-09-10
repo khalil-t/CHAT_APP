@@ -9,6 +9,15 @@ interface AuthScreenProps {
   onContinue: () => void
 }
 
+async function extractMessage(response: Response, fallback: string) {
+  try {
+    const payload = await response.json()
+    if (typeof payload?.message === 'string') return payload.message
+    if (Array.isArray(payload?.message)) return payload.message.join('. ')
+  } catch { /* Response may not contain JSON. */ }
+  return fallback
+}
+
 export function AuthScreen({ onContinue }: AuthScreenProps) {
   const [mode, setMode] = useState<AuthMode>('sign-in')
   const [showPassword, setShowPassword] = useState(false)
@@ -33,7 +42,7 @@ export function AuthScreen({ onContinue }: AuthScreenProps) {
 
     try {
       if (isSignUp) {
-        await fetch(`${apiBase}/auth/sign-up`, {
+        const signUpRes = await fetch(`${apiBase}/auth/sign-up`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -44,6 +53,9 @@ export function AuthScreen({ onContinue }: AuthScreenProps) {
           }),
         })
 
+        if (!signUpRes.ok) {
+          throw new Error(await extractMessage(signUpRes, 'Sign-up failed'))
+        }
       }
 
       const res = await fetch(`${apiBase}/auth/sign-in`, {
@@ -53,8 +65,7 @@ export function AuthScreen({ onContinue }: AuthScreenProps) {
       })
 
       if (!res.ok) {
-        const text = await res.text()
-        throw new Error(text || 'Authentication failed')
+        throw new Error(await extractMessage(res, 'Sign-in failed'))
       }
 
       const data = await res.json()
@@ -130,7 +141,7 @@ export function AuthScreen({ onContinue }: AuthScreenProps) {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 {isSignUp && <label className="block"><span className="mb-2 block text-xs font-medium text-muted-foreground">Full name</span><input required name="name" autoComplete="name" placeholder="Alex Morgan" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm transition-colors placeholder:text-muted-foreground/60 focus:border-primary" /></label>}
                 <label className="block"><span className="mb-2 block text-xs font-medium text-muted-foreground">Email address</span><input required type="email" name="email" autoComplete="email" placeholder="you@company.com" className="h-12 w-full rounded-xl border border-border bg-background px-4 text-sm transition-colors placeholder:text-muted-foreground/60 focus:border-primary" /></label>
-                <label className="block"><span className="mb-2 block text-xs font-medium text-muted-foreground">Password</span><span className="relative block"><input required minLength={8} type={showPassword ? 'text' : 'password'} name="password" autoComplete={isSignUp ? 'new-password' : 'current-password'} placeholder="••••••••" className="h-12 w-full rounded-xl border border-border bg-background px-4 pr-12 text-sm transition-colors placeholder:text-muted-foreground/60 focus:border-primary" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></span></label>
+                <label className="block"><span className="mb-2 block text-xs font-medium text-muted-foreground">Password</span><span className="relative block"><input required minLength={8} maxLength={20} type={showPassword ? 'text' : 'password'} name="password" autoComplete={isSignUp ? 'new-password' : 'current-password'} placeholder="••••••••" className="h-12 w-full rounded-xl border border-border bg-background px-4 pr-12 text-sm transition-colors placeholder:text-muted-foreground/60 focus:border-primary" /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-2 text-muted-foreground hover:text-foreground" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></span>{isSignUp ? <span className="mt-1.5 block text-xs text-muted-foreground">8–20 characters, with at least one uppercase letter, one lowercase letter, and a number or symbol.</span> : null}</label>
                 {!isSignUp && <div className="flex justify-end"><button type="button" className="text-xs text-primary hover:underline">Forgot password?</button></div>}
 
                 {error && (

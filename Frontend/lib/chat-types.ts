@@ -2,6 +2,8 @@
  * Core domain types for the chat application
  */
 
+import type { Dispatch, SetStateAction } from 'react'
+
 export type User = {
   id: string
   name?: string
@@ -9,6 +11,8 @@ export type User = {
   email?: string
   onlineStatus?: 'online' | 'offline' | 'away'
 }
+
+export type UserSearchResponse = User[] | { users?: User[]; data?: User[] }
 
 export type Message = {
   id: string
@@ -38,6 +42,43 @@ export type ConversationWithDetails = Conversation & {
   lastMessage?: Message
 }
 
+export type SignInResponse = {
+  accessToken: string
+}
+
+export type ApiUser = {
+  id: string
+  email: string
+  createdAt: string
+}
+
+export type ApiConversation = {
+  id: string
+  userId: string
+  title: string
+  role: string
+  createdAt: string
+  joined_at: string | null
+}
+
+export type ApiMessage = {
+  id: string
+  conversationId: string | null
+  senderId: string
+  content: string
+  sentAt: string
+  readAt: string | null
+  sender?: ApiUser
+}
+
+export type RealtimeMessage = {
+  messageId: string
+  conversationId: string
+  senderId: string
+  content: string
+  readAt: string | null
+}
+
 export type SocketConnectionState = 'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error'
 
 export type ChatContextType = {
@@ -54,7 +95,7 @@ export type ChatContextType = {
 
   // Actions
   setCurrentUser: (user: User) => void
-  setConversations: (conversations: Conversation[]) => void
+  setConversations: Dispatch<SetStateAction<Conversation[]>>
   setActiveConversationId: (id: string | null) => void
   setMessages: (conversationId: string, messages: Message[]) => void
   addMessage: (message: Message) => void

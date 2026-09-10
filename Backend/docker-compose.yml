@@ -9,13 +9,10 @@ services:
     container_name: chat-api
     env_file:
       - .env
-    environment:
-      PORT: ${PORT:-3001}
-      NODE_ENV: ${NODE_ENV:-development}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "3001:3001"
+      - "3003:3003"
     networks:
       - chat-network
     restart: unless-stopped
@@ -31,8 +28,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: npm run start:realtime
-    expose:
-      - "3002"
+    ports:
+      - "3002:3002"
     env_file:
       - .env
     networks:
@@ -52,6 +49,7 @@ services:
       - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     depends_on:
       - api
+      - realtime
     networks:
       - chat-network
     restart: unless-stopped
@@ -84,8 +82,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
-    ports:
-      - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
