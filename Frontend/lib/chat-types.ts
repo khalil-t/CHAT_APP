@@ -99,6 +99,7 @@ export type ChatContextType = {
   setActiveConversationId: (id: string | null) => void
   setMessages: (conversationId: string, messages: Message[]) => void
   addMessage: (message: Message) => void
+  handleNewMessage: (raw: RealtimeMessage) => void
   setUnreadCounts: (counts: Record<string, number>) => void
   decrementUnreadCount: (conversationId: string) => void
   setSocketStatus: (status: SocketConnectionState) => void

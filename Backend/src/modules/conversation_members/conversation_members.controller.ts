@@ -10,14 +10,14 @@ export class ConversationMembersController {
   ) {}
 
   @Get()
-  findAll(@Query('userId') userId?: number): Promise<Conversation_Members[]> {
+  findAll(@Query('userId') userId?: string): Promise<Conversation_Members[]> {
     return this.conversationMembersService.findAll(userId);
   }
 
   @Get('find-one')
   findOne(
-    @Query('userId') userId: number,
-    @Query('conversationId') conversationId: number,
+    @Query('userId') userId: string,
+    @Query('conversationId') conversationId: string,
   ): Promise<Conversation_Members> {
     return this.conversationMembersService.findOne({ userId, conversationId });
   }
@@ -26,8 +26,8 @@ export class ConversationMembersController {
   create(
     @Body()
     data: {
-      userId: number;
-      conversationId: number;
+      userId: string;
+      conversationId: string;
     },
   ): Promise<Conversation_Members> {
     return this.conversationMembersService.create(data);
@@ -35,8 +35,8 @@ export class ConversationMembersController {
 
   @Delete()
   remove(
-    @Query('userId') userId: number,
-    @Query('conversationId') conversationId: number,
+    @Query('userId') userId: string,
+    @Query('conversationId') conversationId: string,
   ): Promise<void> {
     return this.conversationMembersService.remove({
       userId,

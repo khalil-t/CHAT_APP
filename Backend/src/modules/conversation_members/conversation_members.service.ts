@@ -9,7 +9,7 @@ export class ConversationMembersService {
     private readonly conversationsMembersRepository: Repository<Conversation_Members>,
   ) {}
 
-  async findAll(userId?: number): Promise<Conversation_Members[]> {
+  async findAll(userId?: string): Promise<Conversation_Members[]> {
     if (!userId) {
       return this.conversationsMembersRepository.find({
         order: { joined_at: 'DESC' },
@@ -23,8 +23,8 @@ export class ConversationMembersService {
   }
 
   async findOne(data: {
-    userId: number;
-    conversationId: number;
+    userId: string;
+    conversationId: string;
   }): Promise<Conversation_Members> {
     const conversation = await this.conversationsMembersRepository.findOne({
       where: {
@@ -41,8 +41,8 @@ export class ConversationMembersService {
   }
 
   async create(data: {
-    userId: number;
-    conversationId: number;
+    userId: string;
+    conversationId: string;
   }): Promise<Conversation_Members> {
     const member = this.conversationsMembersRepository.create({
       userId: data.userId,
@@ -52,8 +52,8 @@ export class ConversationMembersService {
     return this.conversationsMembersRepository.save(member);
   }
   async remove(data: {
-    userId: number;
-    conversationId: number;
+    userId: string;
+    conversationId: string;
   }): Promise<void> {
     const result = await this.conversationsMembersRepository.delete({
       userId: data.userId,

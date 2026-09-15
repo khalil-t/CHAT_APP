@@ -25,6 +25,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   timestamp,
   deliveredAt,
 }) => {
+    console.log('[MESSAGE BUBBLE] render:', {
+    content,
+    isOwn,
+    timestamp,
+    deliveredAt,
+  })
+
   const timeAgo = relativeTime(timestamp)
 
   return (

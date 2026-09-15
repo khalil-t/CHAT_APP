@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "CHAT_APP",
+			"path": "../.."
+		},
+		{
+			"name": "Frontend",
+			"path": "../../../../Downloads/Frontend"
+		}
+	],
+	"settings": {}
+}

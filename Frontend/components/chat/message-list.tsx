@@ -25,6 +25,12 @@ export const MessageList: React.FC<MessageListProps> = ({
   users,
   isLoading = false,
 }) => {
+  console.log('[MESSAGE LIST] render:', {
+    count: messages.length,
+    lastMessage: messages[messages.length - 1],
+    isLoading,
+  })
+
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,6 +67,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   return (
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
       {messages.map((message, index) => {
+        
         const showDateDivider =
           index === 0 || !isSameDay(new Date(messages[index - 1].createdAt), new Date(message.createdAt))
         const isOwnMessage = message.senderId === currentUserId

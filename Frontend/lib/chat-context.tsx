@@ -1,10 +1,12 @@
 'use client'
 
 import React, { createContext, useContext, useState, useCallback } from 'react'
+import { normalizeMessage } from './chat-api'
 import type {
   User,
   Conversation,
   Message,
+  RealtimeMessage,
   SocketConnectionState,
   ChatContextType,
 } from './chat-types'
@@ -24,22 +26,67 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null)
 
   const setMessages = useCallback((conversationId: string, msgs: Message[]) => {
-    setMessagesMap((prev) => ({
-      ...prev,
-      [conversationId]: msgs,
-    }))
-  }, [])
-
-  const addMessage = useCallback((message: Message) => {
     setMessagesMap((prev) => {
-      const existing = prev[message.conversationId] || []
-      if (existing.some((item) => item.id === message.id)) return prev
+      const existing = prev[conversationId] || []
+      const knownIds = new Set(msgs.map((message) => message.id))
+      const realtimeOnly = existing.filter((message) => !knownIds.has(message.id))
       return {
         ...prev,
-        [message.conversationId]: [...existing, message],
+        [conversationId]: [...msgs, ...realtimeOnly],
       }
     })
   }, [])
+
+const addMessage = useCallback((message: Message) => {
+  setMessagesMap((prev) => {
+    const existing = prev[message.conversationId] || []
+
+    console.log('[CHAT STATE] BEFORE ADD:', {
+      conversationId: message.conversationId,
+      existingMessages: existing,
+      incomingMessage: message,
+    })
+
+    if (existing.some((item) => item.id === message.id)) {
+      console.log('[CHAT STATE] DUPLICATE - NOT ADDING')
+      return prev
+    }
+
+    const next = {
+      ...prev,
+      [message.conversationId]: [...existing, message],
+    }
+
+    console.log('[CHAT STATE] AFTER ADD:', next[message.conversationId])
+
+    return next
+  })
+}, [])
+
+  const handleNewMessage = useCallback((raw: RealtimeMessage) => {
+    console.log('[CHAT] handleNewMessage called:', raw)
+
+    const message = normalizeMessage(raw)
+
+    console.log('[CHAT] normalized message:', message)
+
+    addMessage(message)
+
+    console.log('[CHAT] addMessage called')
+
+    setConversations((prev) =>
+      prev.map((conv) =>
+        conv.id === message.conversationId
+          ? {
+              ...conv,
+              lastMessage: message,
+              lastMessageAt: message.createdAt,
+              updatedAt: message.createdAt,
+            }
+          : conv
+      )
+    )
+  }, [addMessage])
 
   const setUnreadCounts = useCallback((counts: Record<string, number>) => {
     setUnreadCountsMap(counts)
@@ -68,6 +115,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveConversationId,
     setMessages,
     addMessage,
+    handleNewMessage,
     setUnreadCounts,
     decrementUnreadCount,
     setSocketStatus,

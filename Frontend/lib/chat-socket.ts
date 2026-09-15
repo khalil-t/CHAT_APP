@@ -33,14 +33,20 @@ export const chatSocket = {
         })
 
         socketInstance.on('connect', () => {
-          console.log('[v0] Socket connected')
+          console.log('[SOCKET] connected:', socketInstance?.id)
+          console.log('[SOCKET] transport:', socketInstance?.io.engine.transport.name)
+
           pendingRooms.forEach(emitJoin)
           pendingRooms.clear()
           resolve()
         })
 
+        socketInstance.on('disconnect', (reason) => {
+          console.log('[SOCKET] disconnected:', reason)
+        })
+
         socketInstance.on('connect_error', (error) => {
-          console.error('[v0] Socket connection error:', error)
+          console.error('[SOCKET] connection error:', error)
           reject(error)
         })
       } catch (error) {
@@ -69,6 +75,7 @@ export const chatSocket = {
     } else {
       pendingRooms.add(conversationId)
     }
+    
   },
 
   /**
@@ -133,4 +140,7 @@ export const chatSocket = {
   getInstance: (): Socket | null => {
     return socketInstance
   },
+
+
+  
 }

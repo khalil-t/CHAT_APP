@@ -3,11 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
-  Query,
 } from '@nestjs/common';
 
+import { ActiveUser } from '../../common/decorators/active-user.decorator';
 import { Conversations } from './entities/conversations.entity';
 import { ConversationsService } from './conversations.service';
 
@@ -16,20 +18,26 @@ export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) {}
 
   @Get()
-  findAll(@Query('userId') userId?: number): Promise<Conversations[]> {
-    return this.conversationsService.findAll(userId);
+  findAll(@ActiveUser('id') currentUserId: string): Promise<Conversations[]> {
+    return this.conversationsService.findAll(currentUserId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Conversations> {
+  findOne(@Param('id') id: string): Promise<Conversations> {
     return this.conversationsService.findOne(id);
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
-    @Body() data: { userId: string; title?: string },
+    @ActiveUser('id') currentUserId: string,
+    @Body() data: { targetUserId: string; title?: string },
   ): Promise<Conversations> {
-    return this.conversationsService.create(data);
+    return this.conversationsService.create({
+      currentUserId,
+      targetUserId: data.targetUserId,
+      title: data.title,
+    });
   }
 
   @Delete(':id')

@@ -71,16 +71,23 @@ export class RealtimeGateway {
   }
 
 
-  @SubscribeMessage('conversation:join')
-  async joinConversation(
-    @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody() dto: { conversationId: string },
-  ) {
-    await client.join(`conversation:${dto.conversationId}`);
-    this.logger.log(
-      `User ${client.userId} joined conversation ${dto.conversationId}`,
-    );
-  }
+@SubscribeMessage('conversation:join')
+async joinConversation(
+  @ConnectedSocket() client: AuthenticatedSocket,
+  @MessageBody() dto: { conversationId: string },
+) {
+  const room = `conversation:${dto.conversationId}`;
+
+  await client.join(room);
+
+  this.logger.log(
+    `Socket ${client.id} joined room ${room}`,
+  );
+
+  this.logger.log(
+    `Socket rooms: ${Array.from(client.rooms).join(', ')}`,
+  );
+}
 
    @SubscribeMessage('conversation:leave')
   async leaveConversation(
@@ -105,14 +112,17 @@ export class RealtimeGateway {
   }
 
 deliverMessage(message: any) {
-  this.server
-    .to(
-      `conversation:${message.conversationId}`,
-    )
-    .emit(
-      'message:new',
-      message,
-    );
+  const room = `conversation:${message.conversationId}`;
+
+  this.logger.log(
+    `Delivering message ${message.messageId} to room ${room}`,
+  );
+
+  this.server.to(room).emit('message:new', message);
+
+  this.logger.log(
+    `Message ${message.messageId} emitted to ${room}`,
+  );
 }
 
 }

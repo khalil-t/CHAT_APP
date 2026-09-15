@@ -6,7 +6,6 @@ import { randomUUID } from 'crypto';
 import type { Repository } from 'typeorm';
 
 import jwtConfig from '../../common/config/jwt.config';
-import { MysqlErrorCode } from '../../common/enums/error-codes.enum';
 import type { ActiveUserData } from '../../common/interfaces/active-user-data.interface';
 
 import { User } from '../user/entities/user.entity';

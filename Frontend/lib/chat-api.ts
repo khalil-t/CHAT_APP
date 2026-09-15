@@ -55,9 +55,8 @@ export const chatApi = {
     const response = await fetch(`${API_URL}/auth/sign-up`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, passwordConfirm, created_at: new Date().toISOString() }) })
     if (!response.ok) throw new Error(await getError(response, 'Registration failed'))
   },
-  getConversations: async (token: string, userId?: string): Promise<ApiConversation[]> => {
-    const query = userId ? `?userId=${encodeURIComponent(userId)}` : ''
-    const response = await fetch(`${API_URL}/conversations${query}`, { headers: { Authorization: `Bearer ${token}` } })
+  getConversations: async (token: string): Promise<ApiConversation[]> => {
+    const response = await fetch(`${API_URL}/conversations`, { headers: { Authorization: `Bearer ${token}` } })
     if (!response.ok) throw new Error(await getError(response, 'Failed to fetch conversations'))
     return response.json()
   },
@@ -66,8 +65,8 @@ export const chatApi = {
     if (!response.ok) throw new Error(await getError(response, 'Failed to fetch conversation'))
     return response.json()
   },
-  createConversation: async (userId: string, token: string, title?: string): Promise<ApiConversation> => {
-    const response = await fetch(`${API_URL}/conversations`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ userId, title }) })
+  createConversation: async (targetUserId: string, token: string, title?: string): Promise<ApiConversation> => {
+    const response = await fetch(`${API_URL}/conversations`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ targetUserId, title }) })
     if (!response.ok) throw new Error(await getError(response, 'Failed to start conversation'))
     return response.json()
   },

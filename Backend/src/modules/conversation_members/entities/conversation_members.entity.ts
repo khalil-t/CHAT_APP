@@ -13,11 +13,11 @@ import { Conversations } from 'src/modules/conversations/entities/conversations.
 
 @Entity({ name: 'conversation_members' })
 export class Conversation_Members {
-  @PrimaryColumn({ name: 'user_id' })
-  userId: number;
+  @PrimaryColumn({ name: 'user_id', type: 'uuid' })
+  userId: string;
 
-  @PrimaryColumn({ name: 'conversation_id' })
-  conversationId: number;
+  @PrimaryColumn({ name: 'conversation_id', type: 'uuid' })
+  conversationId: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'joined_at' })
   joined_at: Date;

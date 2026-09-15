@@ -160,10 +160,7 @@ export function AuthScreen({ onContinue }: AuthScreenProps) {
                 </button>
               </form>
 
-              <div className="mt-6 border-t border-border pt-5 text-center">
-                <p className="text-xs leading-5 text-muted-foreground">Your session token is stored locally in the browser after successful sign in.</p>
-                <button type="button" onClick={onContinue} className="mt-3 text-xs font-medium text-primary hover:underline">Continue to chat demo</button>
-              </div>
+       
             </section>
           </div>
         </div>
