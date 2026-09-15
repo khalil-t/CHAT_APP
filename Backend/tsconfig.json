@@ -21,6 +21,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@app/common": ["libs/common/src/index.ts"],
+      "@app/common/*": ["libs/common/src/*"],
+      "@app/infrastructure/rabbitmq": ["libs/infrastructure/rabbitmq/src/index.ts"],
+      "@app/infrastructure/rabbitmq/*": ["libs/infrastructure/rabbitmq/src/*"]
+    }
   }
 }
