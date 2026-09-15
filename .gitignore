@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+
+# Environment variables
+.env
+.env.local
+.env.*
+.env*.local
+
+# Build output
+.next/
+dist/
+build/
+
+# Next.js
+Frontend/.next/
+Backend/dist/
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+*.log
